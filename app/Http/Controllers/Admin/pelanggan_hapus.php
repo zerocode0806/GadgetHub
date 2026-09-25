@@ -1,5 +1,5 @@
 <?php
-include 'koneksi.php';
+require_once APP_ROOT . '/app/Support/koneksi.php';
 
 // Check if 'id' is passed in the URL
 if (isset($_GET['id'])) {
@@ -9,11 +9,10 @@ if (isset($_GET['id'])) {
     $delete_pelanggan = mysqli_query($koneksi, "DELETE FROM pelanggan WHERE id_pelanggan = '$id_pelanggan'");
 
     if ($delete_pelanggan) {
-        echo "<script>alert('Pelanggan berhasil dihapus!'); window.location = '?page=pelanggan';</script>";
+        echo "<script>alert('Pelanggan berhasil dihapus!'); window.location = '/admin/customers';</script>";
     } else {
-        echo "<script>alert('Terjadi kesalahan, coba lagi!'); window.location = '?page=pelanggan';</script>";
+        echo "<script>alert('Terjadi kesalahan, coba lagi!'); window.location = '/admin/customers';</script>";
     }
 } else {
-    echo "<script>alert('ID pelanggan tidak valid!'); window.location = '?page=pelanggan';</script>";
+    echo "<script>alert('ID pelanggan tidak valid!'); window.location = '/admin/customers';</script>";
 }
-?>

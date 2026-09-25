@@ -6,7 +6,11 @@
   --ink: #111111; --muted: #666666; --brand: #111111; --brand-dark: #111111; --soft: #f7f7f7; --line: #e7e7e7; --accent: #111111;
   color-scheme: light;
 }
-*, *::before, *::after { font-family: Inter, Arial, sans-serif !important; }
+body, body *:not(i):not([class*='fa-']) { font-family: Inter, Arial, sans-serif !important; }
+.fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands, [class*='fa-']::before { font-family: 'Font Awesome 6 Free' !important; }
+.fab::before, .fa-brands::before { font-family: 'Font Awesome 6 Brands' !important; }
+.far::before, .fa-regular::before { font-weight: 400 !important; }
+.fas::before, .fa-solid::before { font-weight: 900 !important; }
 html, body { background: #fff !important; color: #111 !important; }
 a { color: #111 !important; }
 a:hover { color: #555 !important; }

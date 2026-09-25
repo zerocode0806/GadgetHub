@@ -1,23 +1,22 @@
 # Aplikasi Kasir Ubeddahlan
 
-Aplikasi PHP/MySQL ini telah ditata ulang mengikuti pemisahan tanggung jawab bergaya Laravel, tanpa mengganti runtime procedural atau alur bisnis yang telah ada. Nama URL lama (`dashboard.php`, `produk.php`, `user_home.php`, dan lainnya) tetap tersedia melalui front controller kompatibilitas di root.
+Proyek PHP/MySQL procedural ini mengadopsi pola struktur bergaya Laravel—front controller, route map, controller, dan view—tanpa mengganti aplikasi menjadi framework Laravel penuh. Tidak ada berkas PHP shim di root proyek; semua permintaan web melewati `public/index.php`.
 
-## Struktur utama
+## Struktur
 
-- `app/Http/Controllers/Admin`, `app/Http/Controllers/Auth`, `app/Http/Controllers/Storefront`, dan `app/Http/Controllers/Api`: halaman dan handler aplikasi per domain.
-- `app/Support`: bootstrap, koneksi database, serta helper bersama.
-- `resources/views/storefront`: partial header/footer storefront.
-- `public`: aset CSS, JavaScript, serta gambar statis yang ditata seperti document root Laravel. Salinan aset di `css/`, `js/`, dan `assets/`, serta direktori `uploads/` tetap berada di root agar semua URL lama dan operasi file tetap kompatibel pada XAMPP maupun Linux.
-- `database/schema.sql` dan `database/migrations`: skema dan migrasi SQL.
-- `vendor`: dependensi Composer yang sudah ada.
+- `public/index.php`: dispatcher/front controller; `public/.htaccess` dan root `.htaccess` mengarahkan route ke dispatcher.
+- `routes/web.php`: tabel route modern. Route lama berakhiran `.php` tetap dikenali oleh router sebagai alias agar bookmark lama tidak putus.
+- `app/Http/Controllers/{admin,auth,storefront,api}`: pemrosesan request dan data.
+- `resources/views/{admin,auth,storefront,api,errors}`: markup tampilan per domain.
+- `app/Support`: bootstrap, koneksi MySQL, dan helper bersama.
+- `public/{css,js,assets,uploads}`: stylesheet, script, gambar, dan unggahan.
+- `database/schema.sql` dan `database/migrations`: skema serta migrasi.
 
 ## Menjalankan
 
-1. Buat database MySQL `ukk_kasir`, lalu impor `database/schema.sql` (terapkan migrasi storefront bila belum ada).
-2. Sesuaikan kredensial MySQL dalam `app/Support/koneksi.php` untuk lingkungan lokal.
-3. Jadikan folder proyek sebagai document root, atau jalankan PHP built-in server dari folder proyek: `php -S 127.0.0.1:8000`.
-4. Paket ekspor Excel menggunakan dependensi Composer di `vendor/`.
+1. Atur document root ke folder `public/` (direkomendasikan), atau gunakan root proyek dengan `.htaccess` dan `mod_rewrite` aktif.
+2. Buat database MySQL `ukk_kasir`, impor `database/schema.sql`, dan jalankan migrasi storefront bila belum diterapkan.
+3. Sesuaikan kredensial lokal di `app/Support/koneksi.php`.
+4. Jalankan dengan PHP 8+ dan ekstensi `mysqli`: `php -S 127.0.0.1:8000 -t public public/index.php`.
 
-## Tema
-
-`REFERENSI.css` dipertahankan sebagai berkas acuan. Tema bersama pada `public/css/theme.css` menerapkan font Inter, latar putih, teks hitam, serta aksen dan komponen abu-abu netral pada halaman admin, autentikasi, dan storefront. Perubahan hanya pada presentasi; tidak ada fitur aplikasi yang sengaja dihapus atau ditambah.
+Font Awesome dimuat melalui stylesheet Font Awesome 6.5.2 CDN di layout dan dokumen HTML sehingga semua elemen ikon menerima font/icon glyph yang benar. Tema hitam-putih mengikuti `REFERENSI.css`; perubahan fitur bisnis tidak dilakukan.

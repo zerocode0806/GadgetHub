@@ -6,6 +6,13 @@ function e($value): string
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
+function user_site_settings(): array
+{
+    global $koneksi;
+    $result = mysqli_query($koneksi, 'SELECT business_name, logo FROM settings WHERE id = 1 LIMIT 1');
+    return $result ? (mysqli_fetch_assoc($result) ?: []) : [];
+}
+
 function user_is_logged_in(): bool
 {
     return isset($_SESSION['id_user'], $_SESSION['level']);
@@ -14,7 +21,7 @@ function user_is_logged_in(): bool
 function user_require_login(): void
 {
     if (!user_is_logged_in()) {
-        header('Location: login.php');
+        header('Location: /login');
         exit;
     }
 }
@@ -30,7 +37,7 @@ function user_require_customer(): void
             echo json_encode(['success' => false, 'message' => 'Silakan masuk sebagai customer terlebih dahulu.']);
             exit;
         }
-        header('Location: dashboard.php');
+        header('Location: /dashboard');
         exit;
     }
 }
@@ -94,11 +101,11 @@ function user_take_flash(): ?array
 function user_image(?string $filename): string
 {
     $filename = trim((string) $filename);
-    if ($filename === '' || !is_file(APP_ROOT . '/uploads/' . basename($filename))) {
+    if ($filename === '' || !is_file(APP_ROOT . '/public/uploads/' . basename($filename))) {
         return 'data:image/svg+xml,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480"><rect width="600" height="480" fill="#eef4f2"/><path d="M190 330l70-80 55 55 45-50 90 75H190z" fill="#9ab5ae"/><circle cx="390" cy="180" r="34" fill="#f2b84b"/><text x="300" y="410" fill="#50706a" font-family="sans-serif" font-size="26" text-anchor="middle">No image</text></svg>');
     }
 
-    return 'uploads/' . rawurlencode(basename($filename));
+    return '/uploads/' . rawurlencode(basename($filename));
 }
 
 function user_money($amount): string

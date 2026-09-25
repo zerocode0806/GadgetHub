@@ -1,5 +1,5 @@
 <?php
-    include 'koneksi.php';
+require_once APP_ROOT . '/app/Support/koneksi.php';
 
     // Check if 'id' is passed in the URL
     if (isset($_GET['id'])) {
@@ -23,4 +23,3 @@
             </script>";
         }
     }
-?>

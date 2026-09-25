@@ -1,6 +1,7 @@
 <?php
+require_once APP_ROOT . '/app/Support/koneksi.php';
 session_start();
-include 'koneksi.php';
+require_once APP_ROOT . '/app/Support/koneksi.php';
 
 if (isset($_GET['id'])) {
     $id_produk = $_GET['id'];
@@ -11,12 +12,11 @@ if (isset($_GET['id'])) {
 
     echo "<script>
         alert('Produk berhasil dihapus dari keranjang!');
-        window.location.href = '?page=checkout';
+        window.location.href = '/admin/checkout';
     </script>";
 } else {
     echo "<script>
         alert('ID produk tidak ditemukan!');
-        window.location.href = '?page=checkout';
+        window.location.href = '/admin/checkout';
     </script>";
 }
-?>

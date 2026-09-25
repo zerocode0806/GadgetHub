@@ -1,5 +1,5 @@
 <?php
-
+require_once APP_ROOT . '/app/Support/koneksi.php';
 require APP_ROOT . '/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -214,4 +214,3 @@ $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
 exit;
 
-?>
