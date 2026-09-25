@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validasi password
     if ($password !== $confirm_password) {
-        echo "<script>alert('Password dan Konfirmasi Password tidak cocok!'); window.location = 'register.html';</script>";
+        echo "<script>alert('Password dan Konfirmasi Password tidak cocok!'); window.location = '/register';</script>";
         exit();
     }
 
@@ -25,9 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Gabungkan nama depan dan belakang
     $nama = $first_name . ' ' . $last_name;
-
-    // Set level ke admin
-    // $level = 'admin';
 
     $stmt = mysqli_prepare($koneksi, "INSERT INTO user (nama, username, password, level) VALUES (?, ?, ?, ?)");
     mysqli_stmt_bind_param($stmt, 'ssss', $nama, $username, $hashed_password, $level);

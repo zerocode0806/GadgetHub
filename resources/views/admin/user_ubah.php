@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4" style="color: #1d3557;">
-            <i class="fas fa-user-edit me-2"></i> Edit User
+            <i class="fas fa-user-edit me-2"></i> Edit Akun
         </h1>
         <a href="/admin/users" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Kembali
@@ -14,7 +14,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Informasi User
+                        <i class="fas fa-info-circle me-2"></i>Informasi Akun
                     </h5>
                 </div>
                 <div class="card-body">
@@ -70,6 +70,7 @@
                                     <select class="form-select" name="level" required>
                                         <option value="admin" <?php echo $data['level'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
                                         <option value="petugas" <?php echo $data['level'] == 'petugas' ? 'selected' : ''; ?>>Petugas</option>
+                                        <option value="user" <?php echo $data['level'] == 'user' ? 'selected' : ''; ?>>User</option>
                                     </select>
                                 </div>
                             </div>

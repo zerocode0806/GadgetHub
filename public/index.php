@@ -7,7 +7,7 @@ if (PHP_SAPI === 'cli-server' && $path !== '/' && $path !== '/index.php' && is_f
     return false;
 }
 $routes = require APP_ROOT . '/routes/web.php';
-$adminPages = ['home', 'user', 'user_tambah', 'user_ubah', 'user_hapus', 'pelanggan', 'pelanggan_detail', 'pelanggan_tambah', 'pelanggan_ubah', 'pelanggan_hapus', 'produk', 'produk_tambah', 'produk_ubah', 'produk_hapus', 'settings', 'pembelian', 'pembelian_tambah', 'kasir', 'kasir_tambah', 'kasir_ubah', 'kasir_hapus', 'penjualan_detail', 'penjualan_hapus', 'penjualan_status_update'];
+$adminPages = ['home', 'user', 'user_tambah', 'user_ubah', 'user_hapus', 'pelanggan', 'pelanggan_detail', 'pelanggan_tambah', 'pelanggan_ubah', 'pelanggan_hapus', 'produk', 'produk_tambah', 'produk_ubah', 'produk_hapus', 'settings', 'pembelian', 'pembelian_tambah', 'penjualan_detail', 'penjualan_hapus', 'penjualan_status_update'];
 $legacy = basename($path);
 if (str_ends_with(strtolower($legacy), '.php')) {
     $legacyName = substr($legacy, 0, -4);
@@ -25,7 +25,8 @@ if (str_ends_with(strtolower($legacy), '.php')) {
             'pesanan' => '/orders', 'pesanan_detail' => '/orders/detail', 'profile' => '/profile',
             'penjualan_status_update' => '/admin/sales/status', 'penjualan_hapus' => '/admin/sales/delete',
             'pelanggan_hapus' => '/admin/customers/delete', 'produk_hapus' => '/admin/products/delete',
-            'user_hapus' => '/admin/users/delete', 'kasir_hapus' => '/admin/cashiers/delete',
+            'user_hapus' => '/admin/users/delete', 'kasir' => '/admin/users', 'kasir_tambah' => '/admin/users',
+            'kasir_ubah' => '/admin/users', 'kasir_hapus' => '/admin/users',
             'cart_hapus' => '/admin/cart/clear',
         ];
         $path = $legacyRoutes[$legacyName] ?? '/';

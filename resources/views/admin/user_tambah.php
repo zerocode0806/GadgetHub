@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4" style="color: #1d3557;">
-            <i class="fas fa-user-plus me-2"></i> Tambah User
+            <i class="fas fa-user-plus me-2"></i> Tambah Akun
         </h1>
         <a href="/admin/users" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Kembali
@@ -14,7 +14,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Informasi User
+                        <i class="fas fa-info-circle me-2"></i>Informasi Akun
                     </h5>
                 </div>
                 <div class="card-body">
@@ -68,13 +68,14 @@
                                         <option value="">Select Level</option>
                                         <option value="admin">Admin</option>
                                         <option value="petugas">Petugas</option>
+                                        <option value="user">User</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary me-2">
-                                    <i class="fas fa-save me-2"></i>Simpan User
+                                    <i class="fas fa-save me-2"></i>Simpan Akun
                                 </button>
                                 <button type="reset" class="btn btn-danger" id="resetButton">
                                     <i class="fas fa-eraser me-2"></i>Reset Form

@@ -21,7 +21,7 @@ if ($level === 'user') {
     exit;
 }
 $page = $_GET['page'] ?? 'home';
-$adminPages = ['home', 'user', 'user_tambah', 'user_ubah', 'user_hapus', 'pelanggan', 'pelanggan_detail', 'pelanggan_tambah', 'pelanggan_ubah', 'pelanggan_hapus', 'produk', 'produk_tambah', 'produk_ubah', 'produk_hapus', 'settings', 'pembelian', 'pembelian_tambah', 'kasir', 'kasir_tambah', 'kasir_ubah', 'kasir_hapus', 'penjualan_detail', 'penjualan_hapus', 'penjualan_status_update', 'checkout'];
+$adminPages = ['home', 'user', 'user_tambah', 'user_ubah', 'user_hapus', 'pelanggan', 'pelanggan_detail', 'pelanggan_tambah', 'pelanggan_ubah', 'pelanggan_hapus', 'produk', 'produk_tambah', 'produk_ubah', 'produk_hapus', 'settings', 'pembelian', 'pembelian_tambah', 'penjualan_detail', 'penjualan_hapus', 'penjualan_status_update', 'checkout'];
 $page = in_array($page, $adminPages, true) ? $page : 'home';
 $pageController = $page === 'checkout'
     ? APP_ROOT . '/app/Http/Controllers/storefront/checkout.php'
