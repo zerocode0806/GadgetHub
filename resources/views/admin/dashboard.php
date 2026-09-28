@@ -128,11 +128,11 @@
 
                         <?php if ($level == 'admin'): ?>
                             <div class="sb-sidenav-menu-heading">Manajemen</div>
-                            <a class="nav-link <?php echo (isset($_GET['page']) && $_GET['page'] == 'user') ? 'active' : ''; ?>" href="/admin/users">
+                            <a class="nav-link <?php echo (isset($_GET['page']) && in_array($_GET['page'], ['user', 'user_tambah', 'user_ubah'], true)) ? 'active' : ''; ?>" href="/admin/users">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-cog"></i></div>
-                                Akun
+                                Akun Staf
                             </a>
-                            <a class="nav-link <?php echo (isset($_GET['page']) && $_GET['page'] == 'pelanggan') ? 'active' : ''; ?>" href="/admin/customers">
+                            <a class="nav-link <?php echo (isset($_GET['page']) && in_array($_GET['page'], ['pelanggan', 'pelanggan_detail', 'pelanggan_tambah', 'pelanggan_ubah'], true)) ? 'active' : ''; ?>" href="/admin/customers">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Pelanggan
                             </a>
@@ -152,9 +152,9 @@
                         <?php endif; ?>
 
                         <div class="sb-sidenav-menu-heading">Transaksi</div>
-                        <a class="nav-link <?php echo (isset($_GET['page']) && $_GET['page'] == 'pelanggan_detail') ? 'active' : ''; ?>" href="/admin/sales">
+                        <a class="nav-link <?php echo (isset($_GET['page']) && in_array($_GET['page'], ['pembelian', 'penjualan_detail'], true)) ? 'active' : ''; ?>" href="/admin/sales">
                             <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
-                            Pembelian
+                            Pesanan
                         </a>
                     </div>
                 </div>

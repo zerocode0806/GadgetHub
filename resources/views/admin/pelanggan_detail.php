@@ -1,160 +1,70 @@
 <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mt-4" style="color: #1d3557;">
-            <i class="fas fa-user me-2"></i> Detail Pelanggan
-        </h1>
-        <a href="/admin/customers" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
-        </a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="mt-4" style="color:#1d3557"><i class="fas fa-user me-2"></i>Detail Pelanggan</h1>
+            <span class="badge <?= $is_account ? 'bg-primary' : 'bg-secondary'; ?>"><?= $is_account ? 'Akun storefront' : 'Data tanpa akun'; ?></span>
+        </div>
+        <div class="d-flex gap-2">
+            <?php if ($is_account || !$customer['has_orders']): ?><a href="/admin/customers/edit?id=<?= (int) $customer['id']; ?>&type=<?= htmlspecialchars($customer_type, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-primary"><i class="fas fa-edit me-1"></i>Edit</a><?php endif; ?>
+            <a href="/admin/customers" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Kembali</a>
+        </div>
     </div>
 
-    <!-- Customer Details Card -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="card-title mb-4">Informasi Pelanggan</h5>
-                    <table class="table table-borderless">
-                        <tr>
-                            <td width="150"><strong>Nama</strong></td>
-                            <td>: <?= $pelanggan['nama_pelanggan'] ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Alamat</strong></td>
-                            <td>: <?= $pelanggan['alamat'] ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>No. Telepon</strong></td>
-                            <td>: <?= $pelanggan['no_telepon'] ?></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    <h5 class="card-title mb-4">Statistik Pembelian</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <div class="card bg-primary text-white">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2">Total Transaksi</h6>
-                                    <h2 class="card-title mb-0"><?= $total_pembelian ?></h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="card bg-success text-white">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2">Total Nilai</h6>
-                                    <h2 class="card-title mb-0">Rp <?= number_format($total_nilai, 0, ',', '.') ?></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="row g-3 mb-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100"><div class="card-body">
+                <h5 class="card-title mb-3">Profil pelanggan</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Nama</dt><dd class="col-sm-8"><?= htmlspecialchars($customer['nama'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></dd>
+                    <?php if ($is_account): ?><dt class="col-sm-4">Username</dt><dd class="col-sm-8">@<?= htmlspecialchars($customer['username'], ENT_QUOTES, 'UTF-8'); ?></dd><?php endif; ?>
+                    <dt class="col-sm-4">Telepon</dt><dd class="col-sm-8"><?= htmlspecialchars($customer['no_telepon'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></dd>
+                    <dt class="col-sm-4">Alamat profil</dt><dd class="col-sm-8"><?= nl2br(htmlspecialchars($customer['alamat'] ?: '—', ENT_QUOTES, 'UTF-8')); ?></dd>
+                </dl>
+            </div></div>
+        </div>
+        <div class="col-lg-7">
+            <div class="row g-3 h-100">
+                <div class="col-sm-6"><div class="card border-0 shadow-sm h-100"><div class="card-body"><div class="text-muted">Total pesanan</div><div class="display-6 fw-bold text-primary"><?= number_format($total_pembelian); ?></div></div></div></div>
+                <div class="col-sm-6"><div class="card border-0 shadow-sm h-100"><div class="card-body"><div class="text-muted">Total nilai pesanan</div><div class="display-6 fw-bold text-success">Rp <?= number_format($total_nilai, 0, ',', '.'); ?></div></div></div></div>
             </div>
         </div>
     </div>
 
-    <!-- Purchase History Card -->
-    <div class="card shadow-sm border-0">
+    <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="card-title">Riwayat Pembelian</h5>
-                <form class="d-flex gap-2" method="GET" action="">
-                    <input type="hidden" name="page" value="pelanggan_detail">
-                    <input type="hidden" name="id" value="<?= $id_pelanggan ?>">
-                    <input type="date" 
-                           name="tanggal_awal" 
-                           class="form-control form-control-sm" 
-                           value="<?= $tanggal_awal ?>"
-                           required>
-                    <input type="date" 
-                           name="tanggal_akhir" 
-                           class="form-control form-control-sm" 
-                           value="<?= $tanggal_akhir ?>"
-                           required>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fas fa-filter me-1"></i> Filter
-                    </button>
-                    <?php if (!empty($tanggal_awal) && !empty($tanggal_akhir)): ?>
-                    <a href="/admin/customers/detail?id=<?= $id_pelanggan ?>" 
-                       class="btn btn-secondary btn-sm">
-                        <i class="fas fa-times me-1"></i> Reset
-                    </a>
-                    <?php endif; ?>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                <h5 class="mb-0">Riwayat pesanan</h5>
+                <form method="get" action="/admin/customers/detail" class="d-flex flex-wrap gap-2">
+                    <input type="hidden" name="id" value="<?= (int) $customer['id']; ?>">
+                    <input type="hidden" name="type" value="<?= htmlspecialchars($customer_type, ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="date" name="tanggal_awal" class="form-control form-control-sm" aria-label="Tanggal awal" value="<?= htmlspecialchars($tanggal_awal, ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="date" name="tanggal_akhir" class="form-control form-control-sm" aria-label="Tanggal akhir" value="<?= htmlspecialchars($tanggal_akhir, ENT_QUOTES, 'UTF-8'); ?>">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-filter me-1"></i>Filter</button>
+                    <?php if ($tanggal_awal !== ''): ?><a class="btn btn-outline-secondary btn-sm" href="/admin/customers/detail?id=<?= (int) $customer['id']; ?>&type=<?= htmlspecialchars($customer_type, ENT_QUOTES, 'UTF-8'); ?>">Reset</a><?php endif; ?>
                 </form>
             </div>
 
-            <!-- Add date range info if filter is active -->
-            <?php if (!empty($tanggal_awal) && !empty($tanggal_akhir)): ?>
-            <div class="alert alert-info alert-sm mb-4">
-                <i class="fas fa-info-circle me-2"></i>
-                Menampilkan data dari tanggal 
-                <strong><?= date('d/m/Y', strtotime($tanggal_awal)) ?></strong> 
-                sampai 
-                <strong><?= date('d/m/Y', strtotime($tanggal_akhir)) ?></strong>
-            </div>
-            <?php endif; ?>
-
-            <div class="row">
-                <?php 
-                if (mysqli_num_rows($query_pembelian) > 0):
-                    while ($data = mysqli_fetch_array($query_pembelian)):
-                ?>
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="card-subtitle text-muted">
-                                        <i class="far fa-calendar me-2"></i>
-                                        <?= date('d/m/Y', strtotime($data['tanggal_penjualan'])); ?>
-                                    </h6>
-                                    <span class="badge bg-primary">#<?= $data['id_penjualan']; ?></span>
-                                </div>
-                                <div class="mb-3">
-                                    <small class="text-muted">Kasir:</small>
-                                    <div class="fw-bold"><?= $data['nama_kasir']; ?></div>
-                                </div>
-                                <div class="mb-3">
-                                    <small class="text-muted">Jumlah Item:</small>
-                                    <div class="fw-bold"><?= $data['total_items']; ?> item</div>
-                                </div>
-                                <div class="mb-3">
-                                    <small class="text-muted">Total Pembelian:</small>
-                                    <div class="h5 mb-0 text-success">
-                                        Rp <?= number_format($data['total_harga'], 0, ',', '.'); ?>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <a href="/admin/sales/detail?&id=<?= $data['id_penjualan']; ?>" 
-                                       class="btn btn-sm btn-info" 
-                                       data-bs-toggle="tooltip" 
-                                       title="Detail">
-                                        <i class="fas fa-eye me-1"></i> Detail
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php 
-                    endwhile;
-                else:
-                ?>
-                    <div class="col-12 text-center py-4">
-                        <img src="/assets/img/no-data.png" alt="No Data" style="max-width: 200px;" class="mb-3">
-                        <p class="text-muted">Belum ada riwayat pembelian</p>
-                    </div>
-                <?php endif; ?>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light"><tr><th>Pesanan</th><th>Tanggal</th><th>Pemroses</th><th>Metode</th><th>Item</th><th>Status</th><th class="text-end">Total</th><th></th></tr></thead>
+                    <tbody>
+                    <?php if (mysqli_num_rows($query_pembelian) === 0): ?>
+                        <tr><td colspan="8" class="text-center text-muted py-4">Belum ada pesanan pada rentang tanggal ini.</td></tr>
+                    <?php else: while ($order = mysqli_fetch_assoc($query_pembelian)): ?>
+                        <tr>
+                            <td>#<?= (int) $order['id_penjualan']; ?></td>
+                            <td><?= $order['tanggal_penjualan'] ? date('d/m/Y', strtotime($order['tanggal_penjualan'])) : '—'; ?></td>
+                            <td><?= htmlspecialchars($order['nama_kasir'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?= htmlspecialchars($order['metode'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?= (int) $order['total_items']; ?></td>
+                            <td><span class="badge bg-<?= $order['status'] === 'Selesai' ? 'success' : ($order['status'] === 'Dibatalkan' ? 'danger' : 'warning text-dark'); ?>"><?= htmlspecialchars($order['status'] ?: 'Proses', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                            <td class="text-end">Rp <?= number_format((float) $order['total_harga'], 0, ',', '.'); ?></td>
+                            <td><a class="btn btn-sm btn-outline-info" href="/admin/sales/detail?id=<?= (int) $order['id_penjualan']; ?>">Detail</a></td>
+                        </tr>
+                    <?php endwhile; endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-
-
-
-<script>
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-</script>

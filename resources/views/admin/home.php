@@ -1,148 +1,31 @@
 <div class="container-fluid px-4">
-    <h1 class="mt-4 mb-4">Dashboard Overview</h1>
-    
-    <!-- Stats Cards Row -->
-    <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start border-5 border-primary mb-4 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-muted small">Total Pelanggan</div>
-                            <div class="fs-4 fw-bold"><?php echo $customer_count; ?></div>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-users fa-2x text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <a href="/admin/customers" class="text-decoration-none">View Details <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start border-5 border-success mb-4 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-muted small">Total Produk</div>
-                            <div class="fs-4 fw-bold"><?php echo $product_count; ?></div>
-                        </div>
-                        <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-box fa-2x text-success"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <a href="/admin/products" class="text-decoration-none">View Details <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start border-5 border-warning mb-4 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-muted small">Total Pembelian</div>
-                            <div class="fs-4 fw-bold"><?php echo $sales_count; ?></div>
-                        </div>
-                        <div class="bg-warning bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-shopping-cart fa-2x text-warning"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <a href="/admin/sales" class="text-decoration-none">View Details <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start border-5 border-info mb-4 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-muted small">Total Pendapatan</div>
-                            <div class="fs-4 fw-bold">Rp <?php echo number_format($total_sales, 0, ',', '.'); ?></div>
-                        </div>
-                        <div class="bg-info bg-opacity-10 p-3 rounded">
-                            <i class="fas fa-money-bill-wave fa-2x text-info"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <a href="/admin/sales" class="text-decoration-none">View Details <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h1 class="mt-4 mb-4" style="color:#1d3557">Ringkasan Ecommerce</h1>
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6"><div class="card border-start border-5 border-primary shadow-sm h-100"><div class="card-body"><div class="text-muted small">Akun Pelanggan</div><div class="fs-4 fw-bold"><?= number_format($customer_count); ?></div><a href="/admin/customers" class="small text-decoration-none">Lihat pelanggan <i class="fas fa-arrow-right ms-1"></i></a></div></div></div>
+        <div class="col-xl-3 col-md-6"><div class="card border-start border-5 border-success shadow-sm h-100"><div class="card-body"><div class="text-muted small">Produk</div><div class="fs-4 fw-bold"><?= number_format($product_count); ?></div><?php if ($is_admin): ?><a href="/admin/products" class="small text-decoration-none">Lihat produk <i class="fas fa-arrow-right ms-1"></i></a><?php endif; ?></div></div></div>
+        <div class="col-xl-3 col-md-6"><div class="card border-start border-5 border-warning shadow-sm h-100"><div class="card-body"><div class="text-muted small">Pesanan</div><div class="fs-4 fw-bold"><?= number_format($sales_count); ?></div><a href="/admin/sales" class="small text-decoration-none">Lihat pesanan <i class="fas fa-arrow-right ms-1"></i></a></div></div></div>
+        <div class="col-xl-3 col-md-6"><div class="card border-start border-5 border-info shadow-sm h-100"><div class="card-body"><div class="text-muted small">Total Nilai Pesanan</div><div class="fs-4 fw-bold">Rp <?= number_format((float) $total_sales, 0, ',', '.'); ?></div><a href="/admin/sales" class="small text-decoration-none">Lihat pesanan <i class="fas fa-arrow-right ms-1"></i></a></div></div></div>
     </div>
 
-    <!-- Business Info Row -->
-    <div class="row">
+    <div class="row g-3">
         <div class="col-xl-8">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-chart-area me-1"></i>
-                        Business Information
-                    </div>
-                    <button class="btn btn-sm btn-primary" onclick="window.location.href='/admin/settings'">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="text-muted small">Business Name</label>
-                                <div class="fs-5"><?php echo $settings['business_name']; ?></div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Address</label>
-                                <div class="fs-5"><?php echo $settings['address']; ?></div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted small">Phone</label>
-                                <div class="fs-5"><?php echo $settings['phone']; ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center">
-                            <label class="text-muted small">Business Logo</label>
-                            <div class="mt-2">
-                                <img src="/uploads/<?php echo $settings['logo']; ?>" alt="Brand Logo" class="img-fluid rounded" style="max-height: 150px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center"><strong><i class="fas fa-store me-2"></i>Informasi Toko</strong><?php if ($is_admin): ?><a class="btn btn-sm btn-primary" href="/admin/settings"><i class="fas fa-edit me-1"></i>Edit</a><?php endif; ?></div>
+                <div class="card-body"><div class="row g-3 align-items-center">
+                    <div class="col-md-8"><dl class="row mb-0">
+                        <dt class="col-sm-4">Nama Toko</dt><dd class="col-sm-8"><?= htmlspecialchars($settings['business_name'] ?? '—', ENT_QUOTES, 'UTF-8'); ?></dd>
+                        <dt class="col-sm-4">Alamat</dt><dd class="col-sm-8"><?= htmlspecialchars($settings['address'] ?? '—', ENT_QUOTES, 'UTF-8'); ?></dd>
+                        <dt class="col-sm-4">Telepon</dt><dd class="col-sm-8"><?= htmlspecialchars($settings['phone'] ?? '—', ENT_QUOTES, 'UTF-8'); ?></dd>
+                    </dl></div>
+                    <?php if (!empty($settings['logo'])): ?><div class="col-md-4 text-center"><img src="/uploads/<?= rawurlencode(basename($settings['logo'])); ?>" alt="Logo toko" class="img-fluid rounded" style="max-height:130px"></div><?php endif; ?>
+                </div></div>
             </div>
         </div>
-
-        <div class="col-xl-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <i class="fas fa-bell me-1"></i>
-                    Quick Actions
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        <a href="/admin/products?action=add" class="list-group-item list-group-item-action">
-                            <i class="fas fa-plus-circle me-2"></i> Add New Product
-                        </a>
-                        <a href="/admin/sales?action=add" class="list-group-item list-group-item-action">
-                            <i class="fas fa-cart-plus me-2"></i> Create New Order
-                        </a>
-                        <a href="/admin/users?action=add" class="list-group-item list-group-item-action">
-                            <i class="fas fa-user-plus me-2"></i> Add New User
-                        </a>
-                        <a href="/admin/settings" class="list-group-item list-group-item-action">
-                            <i class="fas fa-cog me-2"></i> Update Settings
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php if ($is_admin): ?><div class="col-xl-4"><div class="card shadow-sm border-0 h-100"><div class="card-header bg-white"><strong><i class="fas fa-bolt me-2"></i>Aksi Cepat</strong></div><div class="card-body"><div class="list-group">
+            <a href="/admin/products/create" class="list-group-item list-group-item-action"><i class="fas fa-box me-2"></i>Tambah Produk</a>
+            <a href="/admin/customers/create" class="list-group-item list-group-item-action"><i class="fas fa-user-plus me-2"></i>Tambah Akun Pelanggan</a>
+            <a href="/admin/users/create" class="list-group-item list-group-item-action"><i class="fas fa-user-shield me-2"></i>Tambah Akun Staf</a>
+            <a href="/admin/settings" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i>Pengaturan Toko</a>
+        </div></div></div></div><?php endif; ?>
     </div>
 </div>

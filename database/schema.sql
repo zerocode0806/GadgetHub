@@ -80,6 +80,7 @@ INSERT INTO `keranjang` (`id_keranjang`, `id_user`, `id_produk`, `jumlah`, `crea
 
 CREATE TABLE `pelanggan` (
   `id_pelanggan` int NOT NULL,
+  `id_user` int DEFAULT NULL,
   `nama_pelanggan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `no_telepon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -222,7 +223,8 @@ ALTER TABLE `keranjang`
 -- Indexes for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  ADD PRIMARY KEY (`id_pelanggan`);
+  ADD PRIMARY KEY (`id_pelanggan`),
+  ADD KEY `idx_pelanggan_user` (`id_user`);
 
 --
 -- Indexes for table `penjualan`

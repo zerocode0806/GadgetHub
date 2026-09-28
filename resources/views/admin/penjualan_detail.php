@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
     <div class="page-header mb-4">
         <h1 class="fw-bold">
-            <i class="fas fa-receipt"></i> Detail Transaksi
+            <i class="fas fa-receipt"></i> Detail Pesanan
             <span class="fs-5 text-muted">#<?php echo $id; ?></span>
         </h1>
         <nav aria-label="breadcrumb">
@@ -19,7 +19,7 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-white py-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Informasi Transaksi</h5>
+                <h5 class="card-title mb-0">Informasi Pesanan</h5>
                         <div class="transaction-date text-muted">
                             <i class="far fa-calendar-alt"></i>
                             <?php echo date('d F Y', strtotime($data['tanggal_penjualan'])); ?>
@@ -30,20 +30,20 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="info-group">
-                                <label class="text-muted mb-1">Kasir</label>
+                                <label class="text-muted mb-1">Pelanggan</label>
                                 <h6 class="mb-0">
-                                    <i class="fas fa-user-circle text-primary"></i>
-                                    <?php echo $data['nama_kasir']; ?>
+                                    <i class="fas fa-user text-primary"></i>
+                                    <?php echo htmlspecialchars($data['nama_pelanggan'] ?: 'Pelanggan umum', ENT_QUOTES, 'UTF-8'); ?>
                                 </h6>
+                                <div class="small text-muted mt-2"><?= htmlspecialchars($data['telepon_pelanggan'] ?: 'Nomor telepon tidak tersedia', ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="small text-muted"><?= nl2br(htmlspecialchars($data['alamat_pelanggan'] ?: 'Alamat tidak tersedia', ENT_QUOTES, 'UTF-8')); ?></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-group">
-                                <label class="text-muted mb-1">Pelanggan</label>
-                                <h6 class="mb-0">
-                                    <i class="fas fa-user text-primary"></i>
-                                    <?php echo $data['nama_pelanggan'] ?: 'Umum'; ?>
-                                </h6>
+                                <label class="text-muted mb-1">Status Pesanan</label>
+                                <h6 class="mb-0"><?= htmlspecialchars($data['status'] ?: 'Proses', ENT_QUOTES, 'UTF-8'); ?></h6>
+                                <div class="small text-muted mt-2"><?= htmlspecialchars($data['level_pembuat'] === 'user' ? 'Pesanan dari akun storefront' : 'Dicatat oleh petugas', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                         </div>
                     </div>
@@ -108,12 +108,12 @@
                             <span class="fw-bold">Rp <?php echo number_format($data['total_harga'], 0, ',', '.'); ?></span>
                         </div>
                         <div class="payment-item d-flex justify-content-between mb-3">
-                            <span class="text-muted">Pembayaran</span>
-                            <span class="fw-bold text-success">Rp <?php echo number_format($data['bayar'], 0, ',', '.'); ?></span>
+                            <span class="text-muted">Metode pembayaran</span>
+                            <span class="fw-bold"><?php echo htmlspecialchars($data['metode'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
                         <div class="payment-item d-flex justify-content-between">
-                            <span class="text-muted">Kembalian</span>
-                            <span class="fw-bold text-primary">Rp <?php echo number_format($data['kembali'], 0, ',', '.'); ?></span>
+                            <span class="text-muted">Status</span>
+                            <span class="fw-bold"><?php echo htmlspecialchars($data['status'] ?: 'Proses', ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
                     </div>
 

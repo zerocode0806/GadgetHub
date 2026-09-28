@@ -53,8 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     mysqli_begin_transaction($koneksi);
     try {
-        $customer_stmt = mysqli_prepare($koneksi, 'INSERT INTO pelanggan (nama_pelanggan, alamat, no_telepon) VALUES (?, ?, ?)');
-        mysqli_stmt_bind_param($customer_stmt, 'sss', $nama, $alamat, $telepon);
+        $profile_stmt = mysqli_prepare($koneksi, "UPDATE user SET nama = ?, no_telepon = ?, alamat = ? WHERE id_user = ? AND level = 'user'");
+        mysqli_stmt_bind_param($profile_stmt, 'sssi', $nama, $telepon, $alamat, $id_user);
+        if (!mysqli_stmt_execute($profile_stmt)) {
+            throw new RuntimeException('Gagal memperbarui profil pelanggan.');
+        }
+
+        $customer_stmt = mysqli_prepare($koneksi, 'INSERT INTO pelanggan (id_user, nama_pelanggan, alamat, no_telepon) VALUES (?, ?, ?, ?)');
+        mysqli_stmt_bind_param($customer_stmt, 'isss', $id_user, $nama, $alamat, $telepon);
         if (!mysqli_stmt_execute($customer_stmt)) {
             throw new RuntimeException('Gagal menyimpan data pelanggan.');
         }

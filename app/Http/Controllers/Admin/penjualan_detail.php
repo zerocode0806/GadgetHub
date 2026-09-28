@@ -1,25 +1,23 @@
 <?php
 require_once APP_ROOT . '/app/Support/koneksi.php';
-// Mendapatkan id penjualan dari parameter URL
-    $id = $_GET['id'];
+require_once APP_ROOT . '/app/Support/admin_helpers.php';
+admin_require_roles(['admin', 'petugas']);
 
-    // Query untuk mengambil data penjualan, kasir, dan pelanggan
-    $query = mysqli_query($koneksi, "
-        SELECT penjualan.*, user.nama AS nama_kasir, pelanggan.nama_pelanggan 
-        FROM penjualan 
-        LEFT JOIN user ON user.id_user = penjualan.id_kasir 
-        LEFT JOIN pelanggan ON pelanggan.id_pelanggan = penjualan.id_pelanggan 
-        WHERE id_penjualan=$id
-    ");
-    $data = mysqli_fetch_array($query);
-
-    // Query untuk mengambil detail produk dalam penjualan
-    $pro = mysqli_query($koneksi, "
-        SELECT detail_penjualan.*, produk.nama_produk, 
-               detail_penjualan.jumlah_produk,
-               detail_penjualan.sub_total
-        FROM detail_penjualan 
-        LEFT JOIN produk ON produk.id_produk = detail_penjualan.id_produk 
-        WHERE id_penjualan=$id
-    ");
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$id) {
+    http_response_code(404);
+    exit('Pesanan tidak ditemukan.');
+}
+$order_stmt = mysqli_prepare($koneksi, 'SELECT s.*, buyer.nama AS nama_kasir, buyer.level AS level_pembuat, c.nama_pelanggan, c.alamat AS alamat_pelanggan, c.no_telepon AS telepon_pelanggan FROM penjualan s LEFT JOIN user buyer ON buyer.id_user = s.id_kasir LEFT JOIN pelanggan c ON c.id_pelanggan = s.id_pelanggan WHERE s.id_penjualan = ? LIMIT 1');
+mysqli_stmt_bind_param($order_stmt, 'i', $id);
+mysqli_stmt_execute($order_stmt);
+$data = mysqli_fetch_assoc(mysqli_stmt_get_result($order_stmt));
+if (!$data) {
+    http_response_code(404);
+    exit('Pesanan tidak ditemukan.');
+}
+$product_stmt = mysqli_prepare($koneksi, 'SELECT d.*, p.nama_produk FROM detail_penjualan d LEFT JOIN produk p ON p.id_produk = d.id_produk WHERE d.id_penjualan = ?');
+mysqli_stmt_bind_param($product_stmt, 'i', $id);
+mysqli_stmt_execute($product_stmt);
+$pro = mysqli_stmt_get_result($product_stmt);
 require APP_ROOT . '/resources/views/admin/penjualan_detail.php';

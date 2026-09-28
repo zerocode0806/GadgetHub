@@ -1,144 +1,21 @@
 <div class="container-fluid px-4">
+    <?php if ($admin_flash): ?><div class="alert alert-danger"><?= htmlspecialchars($admin_flash['message'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mt-4" style="color: #1d3557;">
-            <i class="fas fa-user-plus me-2"></i> Tambah User
-        </h1>
-        <a href="/admin/users" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
-        </a>
+        <h1 class="mt-4" style="color:#1d3557"><i class="fas fa-user-plus me-2"></i>Tambah Akun Staf</h1>
+        <a href="/admin/users" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Kembali</a>
     </div>
-
-    <div class="row">
-        <!-- Form Section -->
-        <div class="col-lg-12">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-white py-3">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Informasi User
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form id="userForm" method="post">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">First Name</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" name="first_name" id="first_name" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Last Name</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" name="last_name" id="last_name" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label">Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
-                                    <input type="text" class="form-control" name="username" id="username" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" name="password" id="password" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Confirm Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label">Level</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-cogs"></i></span>
-                                    <select class="form-select" name="level" id="level" required>
-                                        <option value="">Select Level</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="petugas">Petugas</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-primary me-2">
-                                    <i class="fas fa-save me-2"></i>Simpan User
-                                </button>
-                                <button type="reset" class="btn btn-danger" id="resetButton">
-                                    <i class="fas fa-eraser me-2"></i>Reset Form
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <div class="card shadow-sm border-0"><div class="card-body">
+        <form method="post" action="/admin/users/create">
+            <input type="hidden" name="admin_csrf" value="<?= htmlspecialchars(admin_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label" for="nama">Nama lengkap</label><input class="form-control" id="nama" name="nama" required></div>
+                <div class="col-md-6"><label class="form-label" for="username">Username</label><input class="form-control" id="username" name="username" autocomplete="off" required></div>
+                <div class="col-md-6"><label class="form-label" for="level">Peran</label><select class="form-select" id="level" name="level" required><option value="">Pilih peran</option><option value="admin">Admin</option><option value="petugas">Petugas</option></select></div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><label class="form-label" for="password">Password (minimal 8 karakter)</label><input class="form-control" type="password" id="password" name="password" minlength="8" autocomplete="new-password" required></div>
+                <div class="col-md-6"><label class="form-label" for="confirm_password">Konfirmasi password</label><input class="form-control" type="password" id="confirm_password" name="confirm_password" minlength="8" autocomplete="new-password" required></div>
+                <div class="col-12"><button class="btn btn-primary" type="submit"><i class="fas fa-save me-2"></i>Simpan Akun Staf</button></div>
             </div>
-        </div>
-    </div>
+        </form>
+    </div></div>
 </div>
-
-<script>
-    // Preview functions
-    document.getElementById('first_name').addEventListener('input', function() {
-        document.getElementById('previewName').textContent = this.value + ' ' + document.getElementById('last_name').value || 'Nama User';
-    });
-
-    document.getElementById('last_name').addEventListener('input', function() {
-        document.getElementById('previewName').textContent = document.getElementById('first_name').value + ' ' + this.value || 'Nama User';
-    });
-
-    document.getElementById('username').addEventListener('input', function() {
-        document.getElementById('previewUsername').textContent = this.value || 'User';
-    });
-
-    document.getElementById('level').addEventListener('input', function() {
-        document.getElementById('previewLevel').textContent = this.value || 'Admin';
-    });
-
-    // Reset preview when form is reset
-    document.getElementById('resetButton').addEventListener('click', function() {
-        setTimeout(() => {
-            document.getElementById('previewName').textContent = 'Nama User';
-            document.getElementById('previewUsername').textContent = 'User';
-            document.getElementById('previewLevel').textContent = 'Admin';
-            document.getElementById('previewImage').src = '/assets/img/no-image.png';
-        }, 0);
-    });
-</script>
-
-<style>
-    .card {
-        border-radius: 10px;
-    }
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,.125);
-    }
-    .form-control:focus, .input-group-text {
-        border-color: #1d3557;
-        box-shadow: 0 0 0 0.2rem rgba(29, 53, 87, 0.25);
-    }
-    .btn-primary {
-        background-color: #1d3557;
-        border-color: #1d3557;
-    }
-    .btn-primary:hover {
-        background-color: #152640;
-        border-color: #152640;
-    }
-    .user-details {
-        border-top: 1px solid rgba(0,0,0,.125);
-        padding-top: 1rem;
-        margin-top: 1rem;
-    }
-</style>

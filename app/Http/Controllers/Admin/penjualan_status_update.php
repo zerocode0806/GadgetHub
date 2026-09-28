@@ -1,32 +1,22 @@
 <?php
 require_once APP_ROOT . '/app/Support/koneksi.php';
-
-if (!isset($_SESSION['id_user'], $_SESSION['level']) || $_SESSION['level'] !== 'admin') {
-    http_response_code(403);
-    exit('Akses ditolak.');
-}
+require_once APP_ROOT . '/app/Support/admin_helpers.php';
+admin_require_roles(['admin', 'petugas']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/sales');
-    exit;
+    admin_redirect('/admin/sales');
 }
-
-$allowed_statuses = ['Proses', 'Dikirim', 'Selesai', 'Dibatalkan', 'Selsesai'];
+admin_verify_csrf();
+$allowed_statuses = ['Proses', 'Dikirim', 'Selesai', 'Dibatalkan'];
 $order_id = filter_input(INPUT_POST, 'id_penjualan', FILTER_VALIDATE_INT);
 $status = $_POST['status'] ?? '';
-$csrf = $_POST['admin_csrf'] ?? '';
-
-if (!hash_equals($_SESSION['admin_csrf'] ?? '', $csrf) || !$order_id || !in_array($status, $allowed_statuses, true)) {
-    $_SESSION['admin_flash'] = ['type' => 'error', 'message' => 'Status pesanan tidak valid.'];
-    header('Location: /admin/sales');
-    exit;
+if (!$order_id || !in_array($status, $allowed_statuses, true)) {
+    admin_set_flash('error', 'Status pesanan tidak valid.');
+    admin_redirect('/admin/sales');
 }
 
 $update_stmt = mysqli_prepare($koneksi, 'UPDATE penjualan SET status = ? WHERE id_penjualan = ?');
 mysqli_stmt_bind_param($update_stmt, 'si', $status, $order_id);
-$_SESSION['admin_flash'] = mysqli_stmt_execute($update_stmt)
-    ? ['type' => 'success', 'message' => 'Status pesanan berhasil diperbarui.']
-    : ['type' => 'error', 'message' => 'Status pesanan gagal diperbarui.'];
-
-header('Location: /admin/sales');
-exit;
+$updated = mysqli_stmt_execute($update_stmt);
+admin_set_flash($updated ? 'success' : 'error', $updated ? 'Status pesanan berhasil diperbarui.' : 'Status pesanan gagal diperbarui.');
+admin_redirect('/admin/sales');
