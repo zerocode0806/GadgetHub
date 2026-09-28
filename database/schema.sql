@@ -99,7 +99,7 @@ CREATE TABLE `penjualan` (
   `id_pelanggan` int DEFAULT NULL,
   `bayar` int DEFAULT NULL,
   `kembali` int DEFAULT NULL,
-  `metode` enum('Cash','Transfer','E-Wallet') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `metode` enum('Cash On Delivery (COD)','QRIS','Bank') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` enum('Proses','Dikirim','Selesai','Dibatalkan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'Proses'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
