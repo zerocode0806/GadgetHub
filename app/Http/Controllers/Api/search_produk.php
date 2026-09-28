@@ -1,9 +1,12 @@
 <?php
 require_once APP_ROOT . '/app/Support/koneksi.php';
 
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$query = "SELECT * FROM produk WHERE nama_produk LIKE '%$search%'";
-$pro = mysqli_query($koneksi, $query);
+$search = trim((string) ($_GET['search'] ?? ''));
+$like = '%' . $search . '%';
+$searchStmt = mysqli_prepare($koneksi, "SELECT * FROM produk WHERE (? = '' OR nama_produk LIKE ? OR kategori_produk LIKE ? OR deskripsi_produk LIKE ? OR spesifikasi_produk LIKE ?) ORDER BY nama_produk ASC");
+mysqli_stmt_bind_param($searchStmt, 'sssss', $search, $like, $like, $like, $like);
+mysqli_stmt_execute($searchStmt);
+$pro = mysqli_stmt_get_result($searchStmt);
 
 // Endpoint tetap menerima form lama yang mengirimkan produk/jumlah ke URL pencarian ini.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

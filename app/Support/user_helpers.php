@@ -9,8 +9,14 @@ function e($value): string
 function user_site_settings(): array
 {
     global $koneksi;
-    $result = mysqli_query($koneksi, 'SELECT business_name, logo FROM settings WHERE id = 1 LIMIT 1');
-    return $result ? (mysqli_fetch_assoc($result) ?: []) : [];
+    $result = mysqli_query($koneksi, 'SELECT business_name, logo, email, address, phone FROM settings WHERE id = 1 LIMIT 1');
+    $settings = $result ? (mysqli_fetch_assoc($result) ?: []) : [];
+    $settings['categories'] = [];
+    $categoryResult = mysqli_query($koneksi, "SELECT nama_kategori FROM kategori ORDER BY CASE nama_kategori WHEN 'Smartphone' THEN 1 WHEN 'Audio' THEN 2 WHEN 'Wearable' THEN 3 WHEN 'Kamera & Video' THEN 4 ELSE 99 END, nama_kategori ASC");
+    if ($categoryResult) {
+        while ($category = mysqli_fetch_assoc($categoryResult)) $settings['categories'][] = $category['nama_kategori'];
+    }
+    return $settings;
 }
 
 function user_is_logged_in(): bool

@@ -1,10 +1,17 @@
 <?php
 require_once APP_ROOT . '/app/Support/koneksi.php';
+$categories = [];
+$categoryResult = mysqli_query($koneksi, 'SELECT nama_kategori FROM kategori ORDER BY nama_kategori ASC');
+if ($categoryResult) {
+    while ($categoryRow = mysqli_fetch_assoc($categoryResult)) $categories[] = $categoryRow['nama_kategori'];
+}
 if (isset($_POST['nama_produk'])) {
     $nama = $_POST['nama_produk'];
+    $kategori = trim($_POST['kategori_produk'] ?? 'Aksesori');
     $harga = $_POST['harga'];
     $stok = $_POST['stok'];
-    $deskripsi = $_POST['deskripsi_produk'];
+    $deskripsi = $_POST['deskripsi_produk'] ?? '';
+    $spesifikasi = $_POST['spesifikasi_produk'] ?? '';
 
     // Proses upload gambar
     $gambar = $_FILES['gambar_produk']['name'];
@@ -15,8 +22,9 @@ if (isset($_POST['nama_produk'])) {
     move_uploaded_file($gambar_tmp, $gambar_path);
 
     // Menyimpan data produk ke database
-    $query = mysqli_query($koneksi, "INSERT INTO produk(nama_produk,harga,stok,gambar_produk,deskripsi_produk) 
-                                   VALUES('$nama','$harga','$stok','$gambar','$deskripsi')");
+    $stmt = mysqli_prepare($koneksi, 'INSERT INTO produk (nama_produk, kategori_produk, harga, stok, gambar_produk, deskripsi_produk, spesifikasi_produk) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    mysqli_stmt_bind_param($stmt, 'ssiisss', $nama, $kategori, $harga, $stok, $gambar, $deskripsi, $spesifikasi);
+    $query = mysqli_stmt_execute($stmt);
     if ($query) {
         echo "<script>
                 Swal.fire({

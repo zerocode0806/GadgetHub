@@ -1,3 +1,7 @@
+<?php
+$kategoriProduk = $data['kategori_produk'] ?? 'Aksesori';
+$kategoriPilihan = $categories ?: ['Smartphone', 'Laptop', 'Tablet', 'Komponen PC', 'Monitor', 'Audio', 'Wearable', 'Aksesori', 'Otomotif', 'Lainnya'];
+?>
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4" style="color: #1d3557;">
@@ -27,6 +31,18 @@
                                     <input type="text" class="form-control" name="nama_produk" id="nama_produk" 
                                            value="<?php echo $data['nama_produk']; ?>" required>
                                 </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="kategori_produk">Kategori</label>
+                                <select class="form-select" name="kategori_produk" id="kategori_produk" required>
+                                    <?php if (!in_array($kategoriProduk, $kategoriPilihan, true)): ?>
+                                        <option value="<?= htmlspecialchars($kategoriProduk, ENT_QUOTES, 'UTF-8'); ?>" selected><?= htmlspecialchars($kategoriProduk, ENT_QUOTES, 'UTF-8'); ?></option>
+                                    <?php endif; ?>
+                                    <?php foreach ($kategoriPilihan as $kategori): ?>
+                                        <option value="<?= htmlspecialchars($kategori, ENT_QUOTES, 'UTF-8'); ?>" <?= $kategoriProduk === $kategori ? 'selected' : ''; ?>><?= htmlspecialchars($kategori, ENT_QUOTES, 'UTF-8'); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="col-md-6">
@@ -63,6 +79,13 @@
                                           rows="4" required><?php echo $data['deskripsi_produk']; ?></textarea>
                             </div>
 
+                            <div class="col-12">
+                                <label class="form-label" for="spesifikasi_produk">Spesifikasi Produk</label>
+                                <textarea class="form-control" name="spesifikasi_produk" id="spesifikasi_produk"
+                                          rows="5" required placeholder="Satu spesifikasi per baris"><?= htmlspecialchars($data['spesifikasi_produk'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+                                <small class="text-muted">Pisahkan detail spesifikasi dengan baris baru.</small>
+                            </div>
+
                             <div class="col-12 mt-4">
                                 <button type="submit" class="btn btn-primary me-2">
                                     <i class="fas fa-save me-2"></i>Simpan Perubahan
@@ -95,6 +118,10 @@
                     <div class="product-details">
                         <h5 id="previewNama" class="text-center mb-3"><?php echo $data['nama_produk']; ?></h5>
                         <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Kategori:</span>
+                            <span id="previewKategori" class="fw-bold"><?= htmlspecialchars($kategoriProduk, ENT_QUOTES, 'UTF-8'); ?></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Harga:</span>
                             <span id="previewHarga" class="fw-bold">
                                 Rp <?php echo number_format($data['harga'], 0, ',', '.'); ?>
@@ -108,6 +135,10 @@
                             <span class="text-muted">Deskripsi:</span>
                             <p id="previewDeskripsi" class="mt-2"><?php echo $data['deskripsi_produk']; ?></p>
                         </div>
+                        <div class="mt-3">
+                            <span class="text-muted">Spesifikasi:</span>
+                            <p id="previewSpesifikasi" class="mt-2"><?= htmlspecialchars($data['spesifikasi_produk'] ?? 'Belum ada spesifikasi', ENT_QUOTES, 'UTF-8'); ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,6 +150,10 @@
     // Preview functions
     document.getElementById('nama_produk').addEventListener('input', function() {
         document.getElementById('previewNama').textContent = this.value || 'Nama Produk';
+    });
+
+    document.getElementById('kategori_produk').addEventListener('change', function() {
+        document.getElementById('previewKategori').textContent = this.value;
     });
 
     document.getElementById('harga').addEventListener('input', function() {
@@ -137,6 +172,10 @@
         document.getElementById('previewDeskripsi').textContent = this.value || 'Tidak ada deskripsi';
     });
 
+    document.getElementById('spesifikasi_produk').addEventListener('input', function() {
+        document.getElementById('previewSpesifikasi').textContent = this.value || 'Belum ada spesifikasi';
+    });
+
     document.getElementById('fileInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -152,9 +191,12 @@
     document.getElementById('resetButton').addEventListener('click', function() {
         setTimeout(() => {
             document.getElementById('previewNama').textContent = '<?php echo $data['nama_produk']; ?>';
+            document.getElementById('kategori_produk').value = <?= json_encode($kategoriProduk, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+            document.getElementById('previewKategori').textContent = <?= json_encode($kategoriProduk, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
             document.getElementById('previewHarga').textContent = 'Rp <?php echo number_format($data['harga'], 0, ',', '.'); ?>';
             document.getElementById('previewStok').textContent = '<?php echo $data['stok']; ?>';
             document.getElementById('previewDeskripsi').textContent = '<?php echo $data['deskripsi_produk']; ?>';
+            document.getElementById('previewSpesifikasi').textContent = <?= json_encode($data['spesifikasi_produk'] ?? 'Belum ada spesifikasi', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
             document.getElementById('previewImage').src = '<?php echo $data['gambar_produk'] ? "/uploads/".$data['gambar_produk'] : "/assets/img/no-image.png"; ?>';
         }, 0);
     });
@@ -191,4 +233,3 @@
         min-height: 120px;
     }
 </style>
-

@@ -29,6 +29,16 @@
                             </div>
 
                             <div class="col-md-6">
+                                <label class="form-label" for="kategori_produk">Kategori</label>
+                                <select class="form-select" name="kategori_produk" id="kategori_produk" required>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8'); ?>" <?= $category === 'Aksesori' ? 'selected' : ''; ?>><?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8'); ?></option>
+                                    <?php endforeach; ?>
+                                    <?php if (!$categories): ?><option value="Aksesori" selected>Aksesori</option><?php endif; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
                                 <label class="form-label">Harga</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
@@ -57,6 +67,13 @@
                                 <label class="form-label">Deskripsi Produk</label>
                                 <textarea class="form-control" name="deskripsi_produk" id="deskripsi_produk" 
                                           rows="4" required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="spesifikasi_produk">Spesifikasi Produk</label>
+                                <textarea class="form-control" name="spesifikasi_produk" id="spesifikasi_produk"
+                                          rows="5" required placeholder="Contoh:&#10;Model: ...&#10;Memori: ...&#10;Warna: ..."></textarea>
+                                <small class="text-muted">Tuliskan satu spesifikasi pada setiap baris.</small>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -89,6 +106,10 @@
                     <div class="product-details">
                         <h5 id="previewNama" class="text-center mb-3">Nama Produk</h5>
                         <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Kategori:</span>
+                            <span id="previewKategori" class="fw-bold">Aksesori</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Harga:</span>
                             <span id="previewHarga" class="fw-bold">Rp 0</span>
                         </div>
@@ -99,6 +120,10 @@
                         <div class="mt-3">
                             <span class="text-muted">Deskripsi:</span>
                             <p id="previewDeskripsi" class="mt-2">Tidak ada deskripsi</p>
+                        </div>
+                        <div class="mt-3">
+                            <span class="text-muted">Spesifikasi:</span>
+                            <p id="previewSpesifikasi" class="mt-2">Belum ada spesifikasi</p>
                         </div>
                     </div>
                 </div>
@@ -111,6 +136,10 @@
     // Preview functions
     document.getElementById('nama_produk').addEventListener('input', function() {
         document.getElementById('previewNama').textContent = this.value || 'Nama Produk';
+    });
+
+    document.getElementById('kategori_produk').addEventListener('change', function() {
+        document.getElementById('previewKategori').textContent = this.value;
     });
 
     document.getElementById('harga').addEventListener('input', function() {
@@ -127,6 +156,10 @@
 
     document.getElementById('deskripsi_produk').addEventListener('input', function() {
         document.getElementById('previewDeskripsi').textContent = this.value || 'Tidak ada deskripsi';
+    });
+
+    document.getElementById('spesifikasi_produk').addEventListener('input', function() {
+        document.getElementById('previewSpesifikasi').textContent = this.value || 'Belum ada spesifikasi';
     });
 
     document.getElementById('fileInput').addEventListener('change', function(event) {
@@ -146,9 +179,12 @@
     document.getElementById('resetButton').addEventListener('click', function() {
         setTimeout(() => {
             document.getElementById('previewNama').textContent = 'Nama Produk';
+            document.getElementById('kategori_produk').selectedIndex = 0;
+            document.getElementById('previewKategori').textContent = document.getElementById('kategori_produk').value;
             document.getElementById('previewHarga').textContent = 'Rp 0';
             document.getElementById('previewStok').textContent = '0';
             document.getElementById('previewDeskripsi').textContent = 'Tidak ada deskripsi';
+            document.getElementById('previewSpesifikasi').textContent = 'Belum ada spesifikasi';
             document.getElementById('previewImage').src = '/assets/img/no-image.png';
         }, 0);
     });
@@ -179,5 +215,3 @@
         margin-top: 1rem;
     }
 </style>
-
-

@@ -357,7 +357,7 @@ function searchProduk() {
     
     // Buat objek AJAX
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/products/search?search=" + searchTerm, true);
+    xhr.open("GET", "/api/products/search?search=" + encodeURIComponent(searchTerm), true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             // Update konten produk dengan hasil pencarian

@@ -141,6 +141,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                                 Produk
                             </a>
+                            <a class="nav-link <?php echo (isset($_GET['page']) && $_GET['page'] == 'kategori') ? 'active' : ''; ?>" href="/admin/categories">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
+                                Kategori
+                            </a>
                             <a class="nav-link <?php echo (isset($_GET['page']) && $_GET['page'] == 'settings') ? 'active' : ''; ?>" href="/admin/settings">
                                 <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
                                 Settings

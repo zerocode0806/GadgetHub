@@ -3,9 +3,10 @@
         <h1 class="mt-4" style="color: #1d3557;">
             <i class="fas fa-box me-2"></i> Manajemen Produk
         </h1>
-        <a href="/admin/products/create" class="btn btn-primary">
-            <i class="fas fa-plus-circle me-2"></i>Tambah Produk
-        </a>
+        <div class="d-flex gap-2">
+            <a href="/admin/categories" class="btn btn-outline-secondary"><i class="fas fa-tags me-2"></i>Kategori</a>
+            <a href="/admin/products/create" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i>Tambah Produk</a>
+        </div>
     </div>
 
     <!-- Search and Filter Card -->
@@ -18,7 +19,7 @@
                         <span class="input-group-text bg-light">
                             <i class="fas fa-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" class="form-control" placeholder="Cari produk..." value="<?= $search; ?>">
+                        <input type="text" name="search" class="form-control" placeholder="Cari nama, kategori, deskripsi, atau spesifikasi..." value="<?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -48,6 +49,7 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <span class="badge bg-light text-dark border mb-2"><?= htmlspecialchars($data['kategori_produk'] ?? 'Aksesori', ENT_QUOTES, 'UTF-8'); ?></span>
                             <h5 class="card-title text-truncate"><?= $data['nama_produk']; ?></h5>
                             <p class="card-text text-primary fw-bold">
                                 IDR <?= number_format($data['harga'], 0, ',', '.'); ?>
@@ -81,7 +83,7 @@
         <ul class="pagination justify-content-center">
             <?php if ($halamanAktif > 1): ?>
                 <li class="page-item">
-                    <a class="page-link" href="/admin/products?halaman=<?= $halamanAktif - 1 ?>&search=<?= $search ?>">
+                    <a class="page-link" href="/admin/products?halaman=<?= $halamanAktif - 1 ?>&search=<?= urlencode($search); ?>">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -89,13 +91,13 @@
 
             <?php for ($i = 1; $i <= $jumlahHalaman; $i++): ?>
                 <li class="page-item <?= ($i == $halamanAktif) ? 'active' : '' ?>">
-                    <a class="page-link" href="/admin/products?halaman=<?= $i; ?>&search=<?= $search; ?>"><?= $i; ?></a>
+                    <a class="page-link" href="/admin/products?halaman=<?= $i; ?>&search=<?= urlencode($search); ?>"><?= $i; ?></a>
                 </li>
             <?php endfor; ?>
 
             <?php if ($halamanAktif < $jumlahHalaman): ?>
                 <li class="page-item">
-                    <a class="page-link" href="/admin/products?halaman=<?= $halamanAktif + 1 ?>&search=<?= $search ?>">
+                    <a class="page-link" href="/admin/products?halaman=<?= $halamanAktif + 1 ?>&search=<?= urlencode($search); ?>">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -126,4 +128,3 @@
         color: white;
     }
 </style>
-

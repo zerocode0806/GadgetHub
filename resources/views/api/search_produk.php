@@ -4,6 +4,7 @@
         <img src="/uploads/<?= htmlspecialchars($produk['gambar_produk'], ENT_QUOTES, 'UTF-8'); ?>" class="card-img-top" alt="<?= htmlspecialchars($produk['nama_produk'], ENT_QUOTES, 'UTF-8'); ?>">
         <div class="product-card-body">
             <h5 class="product-title"><?= htmlspecialchars($produk['nama_produk'], ENT_QUOTES, 'UTF-8') . ' (Stok: ' . (int) $produk['stok'] . ')'; ?></h5>
+            <p class="small text-muted mb-1"><?= htmlspecialchars($produk['kategori_produk'] ?? 'Aksesori', ENT_QUOTES, 'UTF-8'); ?></p>
             <p class="product-price">IDR <?= number_format((int) $produk['harga'], 0, ',', '.'); ?></p>
             <p class="product-description"><?= nl2br(htmlspecialchars($produk['deskripsi_produk'], ENT_QUOTES, 'UTF-8')); ?></p>
             <div class="quantity-control">

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$koneksi = mysqli_connect("localhost", "root", "", "ukk_kasir");
+$koneksi = mysqli_connect("localhost", "root", "", "gadgethub-db");
 
 // Periksa koneksi
 if (mysqli_connect_errno()) {

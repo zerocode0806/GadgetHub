@@ -3,17 +3,17 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="fw-bold">
-                    <i class="fas fa-users"></i> Manajemen Akun
+                    <i class="fas fa-users"></i> Manajemen Pengguna
                 </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Manajemen Akun</li>
+                        <li class="breadcrumb-item active">Manajemen Pengguna</li>
                     </ol>
                 </nav>
             </div>
             <a href="/admin/users/create" class="btn btn-primary">
-                <i class="fas fa-plus-circle me-2"></i>Tambah Akun
+                <i class="fas fa-plus-circle me-2"></i>Tambah Pengguna
             </a>
         </div>
     </div>
@@ -26,7 +26,7 @@
                         <tr>
                             <th>Nama</th>
                             <th>Username</th>
-                            <th>Level Akun</th>
+                            <th>Level</th>
                             <th>Status</th>
                             <th class="text-end">Aksi</th>
                         </tr>
@@ -56,7 +56,7 @@
                                 </td>
                                 <td>
                                     <?php 
-                                    $levelClass = ['admin' => 'bg-primary', 'petugas' => 'bg-warning text-dark', 'user' => 'bg-success'][$data['level']] ?? 'bg-secondary';
+                                    $levelClass = $data['level'] == 'admin' ? 'bg-primary' : 'bg-info';
                                     ?>
                                     <span class="badge <?php echo $levelClass; ?>"><?php echo ucfirst($data['level']); ?></span>
                                 </td>
