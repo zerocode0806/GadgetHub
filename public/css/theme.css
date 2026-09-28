@@ -52,6 +52,9 @@ footer a, .user-footer a { color: #eee !important; }
 .user-nav, header.user-nav { background: #fff !important; border-bottom: 1px solid #eee !important; color: #111 !important; }
 .user-nav a, .user-nav .brand, .user-nav .nav-links a, .user-nav .icon-link, .user-nav .user-pill { color: #222 !important; }
 .user-nav .nav-links a.active, .user-nav .nav-links a:hover { color: #000 !important; border-color: #111 !important; }
+.user-nav a.storefront-login-link, .user-nav a.storefront-login-link:visited { background: #111 !important; border-color: #111 !important; color: #fff !important; }
+.user-nav a.storefront-login-link:hover, .user-nav a.storefront-login-link:focus-visible { background: #333 !important; border-color: #333 !important; color: #fff !important; }
+.user-nav a.storefront-login-link:focus-visible { outline: 2px solid #555; outline-offset: 3px; }
 .user-main { background: #fff !important; }
 .hero, .categories, .trending, .product-detail, .product-info, .cart-page, .auth-wrapper { color: #111 !important; background: #fff !important; }
 .hero:after { border-color: #e7e7e7 !important; }

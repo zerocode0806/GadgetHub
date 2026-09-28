@@ -1,6 +1,6 @@
 <?php
 return [
-    '/' => 'auth/index.php',
+    '/' => 'storefront/user_home.php',
     '/login' => 'auth/login.php',
     '/register' => 'auth/register.php',
     '/logout' => 'auth/logout.php',

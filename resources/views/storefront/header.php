@@ -11,7 +11,7 @@ $active_page = $active_page ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($page_title); ?> - <?= e($site_name); ?></title>
     <link rel="stylesheet" href="/assets/css/user.css">
-    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/theme.css?v=20260928-2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body class="user-site">
@@ -26,7 +26,7 @@ $active_page = $active_page ?? '';
         <div class="nav-actions">
             <form class="search-mini" action="/products" method="get"><i class="fa-solid fa-magnifying-glass muted"></i><input name="q" value="<?= e($_GET['q'] ?? ''); ?>" aria-label="Cari produk" placeholder="Cari produk"></form>
             <a class="icon-link" href="/cart" aria-label="Keranjang"><i class="fa-solid fa-cart-shopping"></i><span id="cart-count" class="cart-count"<?= user_cart_count() < 1 ? ' hidden' : ''; ?>><?= user_cart_count(); ?></span></a>
-            <?php if (isset($_SESSION['id_user'])): ?><a class="user-pill" href="/profile"><i class="fa-regular fa-user"></i> <?= e($_SESSION['username']); ?></a><?php else: ?><a class="btn btn-primary" href="/login">Masuk</a><?php endif; ?>
+            <?php if (isset($_SESSION['id_user'])): ?><a class="user-pill" href="/profile"><i class="fa-regular fa-user"></i> <?= e($_SESSION['username']); ?></a><?php else: ?><a class="btn btn-primary storefront-login-link" href="/login">Masuk</a><?php endif; ?>
             <button class="menu-toggle" type="button" aria-label="Buka navigasi" onclick="document.getElementById('user-nav-links').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
         </div>
     </div>
