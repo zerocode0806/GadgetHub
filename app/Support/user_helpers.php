@@ -59,8 +59,9 @@ function user_csrf_token(): string
 
 function user_verify_csrf(): void
 {
+    $expected = $_SESSION['user_csrf'] ?? '';
     $token = $_POST['csrf_token'] ?? '';
-    if (!hash_equals($_SESSION['user_csrf'] ?? '', $token)) {
+    if ($expected === '' || $token === '' || !hash_equals($expected, $token)) {
         http_response_code(419);
         exit('Permintaan tidak valid. Silakan muat ulang halaman.');
     }
