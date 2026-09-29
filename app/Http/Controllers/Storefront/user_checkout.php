@@ -34,7 +34,7 @@ foreach ($cart as $id => $quantity) {
 }
 
 if (!$items) {
-    $_SESSION['cart'] = [];
+    user_cart_clear();
     user_redirect('/cart');
 }
 
@@ -97,6 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!mysqli_stmt_execute($stock_stmt) || mysqli_stmt_affected_rows($stock_stmt) !== 1) {
                 throw new RuntimeException('Stok produk tidak mencukupi.');
             }
+        }
+
+        $clear_cart_stmt = mysqli_prepare($koneksi, 'DELETE FROM keranjang WHERE id_user = ?');
+        mysqli_stmt_bind_param($clear_cart_stmt, 'i', $id_user);
+        if (!mysqli_stmt_execute($clear_cart_stmt)) {
+            throw new RuntimeException('Gagal mengosongkan keranjang setelah pesanan dibuat.');
         }
 
         mysqli_commit($koneksi);

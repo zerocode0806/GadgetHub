@@ -65,13 +65,6 @@ CREATE TABLE `keranjang` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `keranjang`
---
-
-INSERT INTO `keranjang` (`id_keranjang`, `id_user`, `id_produk`, `jumlah`, `created_at`) VALUES
-(1, 20, 23, 4, '2025-01-28 14:16:39');
-
 -- --------------------------------------------------------
 
 --
@@ -205,19 +198,23 @@ INSERT INTO `user` (`id_user`, `nama`, `username`, `no_telepon`, `alamat`, `pass
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_produk` (`id_produk`);
+  ADD KEY `id_produk` (`id_produk`),
+  ADD KEY `idx_cart_user` (`id_user`);
 
 --
 -- Indexes for table `detail_penjualan`
 --
 ALTER TABLE `detail_penjualan`
-  ADD PRIMARY KEY (`id_detail`);
+  ADD PRIMARY KEY (`id_detail`),
+  ADD KEY `idx_detail_penjualan_order` (`id_penjualan`),
+  ADD KEY `idx_detail_penjualan_product` (`id_produk`);
 
 --
 -- Indexes for table `keranjang`
 --
 ALTER TABLE `keranjang`
-  ADD PRIMARY KEY (`id_keranjang`);
+  ADD PRIMARY KEY (`id_keranjang`),
+  ADD UNIQUE KEY `uq_keranjang_user_produk` (`id_user`, `id_produk`);
 
 --
 -- Indexes for table `pelanggan`
@@ -230,13 +227,16 @@ ALTER TABLE `pelanggan`
 -- Indexes for table `penjualan`
 --
 ALTER TABLE `penjualan`
-  ADD PRIMARY KEY (`id_penjualan`);
+  ADD PRIMARY KEY (`id_penjualan`),
+  ADD KEY `idx_penjualan_user` (`id_kasir`),
+  ADD KEY `idx_penjualan_pelanggan` (`id_pelanggan`);
 
 --
 -- Indexes for table `produk`
 --
 ALTER TABLE `produk`
-  ADD PRIMARY KEY (`id_produk`);
+  ADD PRIMARY KEY (`id_produk`),
+  ADD KEY `idx_produk_kategori` (`kategori_produk`);
 
 --
 -- Indexes for table `settings`
@@ -270,7 +270,7 @@ ALTER TABLE `detail_penjualan`
 -- AUTO_INCREMENT for table `keranjang`
 --
 ALTER TABLE `keranjang`
-  MODIFY `id_keranjang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_keranjang` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `pelanggan`
@@ -305,12 +305,6 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `cart`
---
-ALTER TABLE `cart`
-  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`);
 
 UPDATE `produk`
 SET `kategori_produk` = CASE
@@ -355,6 +349,34 @@ INSERT IGNORE INTO `kategori` (`nama_kategori`)
 SELECT DISTINCT TRIM(`kategori_produk`)
 FROM `produk`
 WHERE `kategori_produk` IS NOT NULL AND TRIM(`kategori_produk`) <> '';
+
+-- Cart storefront hanya tersimpan pada tabel keranjang; cart tetap kompatibel
+-- dengan layar kasir lama dan keduanya menjaga integritas user/produk.
+ALTER TABLE `cart`
+  ADD CONSTRAINT `fk_cart_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_cart_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `keranjang`
+  ADD CONSTRAINT `fk_keranjang_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_keranjang_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
+
+ALTER TABLE `pelanggan`
+  ADD CONSTRAINT `fk_pelanggan_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE SET NULL;
+
+ALTER TABLE `penjualan`
+  ADD CONSTRAINT `fk_penjualan_user` FOREIGN KEY (`id_kasir`) REFERENCES `user` (`id_user`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_penjualan_pelanggan` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id_pelanggan`) ON DELETE SET NULL;
+
+ALTER TABLE `detail_penjualan`
+  ADD CONSTRAINT `fk_detail_penjualan_order` FOREIGN KEY (`id_penjualan`) REFERENCES `penjualan` (`id_penjualan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_detail_penjualan_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE SET NULL;
+
+ALTER TABLE `produk`
+  ADD CONSTRAINT `fk_produk_kategori` FOREIGN KEY (`kategori_produk`) REFERENCES `kategori` (`nama_kategori`) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+ALTER TABLE `ulasan_produk`
+  ADD CONSTRAINT `fk_ulasan_produk_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_ulasan_produk_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 
 COMMIT;
 

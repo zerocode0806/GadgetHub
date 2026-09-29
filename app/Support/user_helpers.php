@@ -73,7 +73,99 @@ function user_cart(): array
         $_SESSION['cart'] = [];
     }
 
+    if (isset($_SESSION['id_user'], $_SESSION['level']) && $_SESSION['level'] === 'user') {
+        global $koneksi;
+        $id_user = (int) $_SESSION['id_user'];
+        $cart_owner = $_SESSION['cart_owner_user_id'] ?? null;
+        $legacy_session_cart = $cart_owner === null ? $_SESSION['cart'] : [];
+        if ($cart_owner !== null && (int) $cart_owner !== $id_user) {
+            $_SESSION['cart'] = [];
+        }
+
+        $stmt = mysqli_prepare($koneksi, 'SELECT id_produk, jumlah FROM keranjang WHERE id_user = ? AND jumlah > 0');
+        if ($stmt && mysqli_stmt_bind_param($stmt, 'i', $id_user) && mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+            $saved_cart = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $saved_cart[(int) $row['id_produk']] = (int) $row['jumlah'];
+            }
+
+            foreach ($legacy_session_cart as $product_id => $legacy_quantity) {
+                $product_id = (int) $product_id;
+                $legacy_quantity = (int) $legacy_quantity;
+                if ($product_id < 1 || $legacy_quantity < 1) {
+                    continue;
+                }
+                $product_stmt = mysqli_prepare($koneksi, 'SELECT stok FROM produk WHERE id_produk = ? LIMIT 1');
+                if (!$product_stmt || !mysqli_stmt_bind_param($product_stmt, 'i', $product_id) || !mysqli_stmt_execute($product_stmt)) {
+                    continue;
+                }
+                $product = mysqli_fetch_assoc(mysqli_stmt_get_result($product_stmt));
+                if (!$product) {
+                    continue;
+                }
+                $quantity = min(max($saved_cart[$product_id] ?? 0, $legacy_quantity), (int) $product['stok']);
+                if ($quantity > 0 && user_cart_set_quantity($product_id, $quantity)) {
+                    $saved_cart[$product_id] = $quantity;
+                }
+            }
+
+            $_SESSION['cart'] = $saved_cart;
+            $_SESSION['cart_owner_user_id'] = $id_user;
+        }
+    }
+
     return $_SESSION['cart'];
+}
+
+function user_cart_set_quantity(int $id_produk, int $jumlah): bool
+{
+    if ($id_produk < 1 || $jumlah < 0) {
+        return false;
+    }
+
+    if (isset($_SESSION['id_user'], $_SESSION['level']) && $_SESSION['level'] === 'user') {
+        global $koneksi;
+        $id_user = (int) $_SESSION['id_user'];
+
+        if ($jumlah === 0) {
+            $stmt = mysqli_prepare($koneksi, 'DELETE FROM keranjang WHERE id_user = ? AND id_produk = ?');
+            if (!$stmt || !mysqli_stmt_bind_param($stmt, 'ii', $id_user, $id_produk) || !mysqli_stmt_execute($stmt)) {
+                return false;
+            }
+            unset($_SESSION['cart'][$id_produk]);
+            return true;
+        }
+
+        $stmt = mysqli_prepare($koneksi, 'INSERT INTO keranjang (id_user, id_produk, jumlah) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE jumlah = ?');
+        if (!$stmt || !mysqli_stmt_bind_param($stmt, 'iiii', $id_user, $id_produk, $jumlah, $jumlah) || !mysqli_stmt_execute($stmt)) {
+            return false;
+        }
+        $_SESSION['cart'][$id_produk] = $jumlah;
+        return true;
+    }
+
+    if ($jumlah === 0) {
+        unset($_SESSION['cart'][$id_produk]);
+    } else {
+        $_SESSION['cart'][$id_produk] = $jumlah;
+    }
+    return true;
+}
+
+function user_cart_clear(): bool
+{
+    if (isset($_SESSION['id_user'], $_SESSION['level']) && $_SESSION['level'] === 'user') {
+        global $koneksi;
+        $id_user = (int) $_SESSION['id_user'];
+        $stmt = mysqli_prepare($koneksi, 'DELETE FROM keranjang WHERE id_user = ?');
+        if (!$stmt || !mysqli_stmt_bind_param($stmt, 'i', $id_user) || !mysqli_stmt_execute($stmt)) {
+            return false;
+        }
+    }
+
+    $_SESSION['cart'] = [];
+    return true;
 }
 
 function user_cart_count(): int

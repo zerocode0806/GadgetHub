@@ -4,6 +4,7 @@ require_once APP_ROOT . '/app/Support/user_helpers.php';
 user_require_customer();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') user_redirect('/products');
 user_verify_csrf();
+$cart = user_cart();
 $is_ajax = user_is_ajax_request();
 $id = filter_input(INPUT_POST, 'id_produk', FILTER_VALIDATE_INT);
 $jumlah = filter_input(INPUT_POST, 'jumlah', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
@@ -16,12 +17,15 @@ if (!$product || (int) $product['stok'] < 1) {
 	if ($is_ajax) { http_response_code(409); header('Content-Type: application/json'); echo json_encode(['success' => false, 'message' => 'Produk sedang tidak tersedia.']); exit; }
 	user_flash('error', 'Produk sedang tidak tersedia.'); user_redirect('/products');
 }
-$current = (int) ($_SESSION['cart'][$id] ?? 0); $new_quantity = $current + $jumlah;
+$current = (int) ($cart[$id] ?? 0); $new_quantity = $current + $jumlah;
 if ($new_quantity > (int) $product['stok']) {
 	if ($is_ajax) { http_response_code(409); header('Content-Type: application/json'); echo json_encode(['success' => false, 'message' => 'Jumlah melebihi stok yang tersedia.']); exit; }
 	user_flash('error', 'Jumlah melebihi stok yang tersedia.'); user_redirect('/product?id=' . $id);
 }
-$_SESSION['cart'][$id] = $new_quantity;
+if (!user_cart_set_quantity($id, $new_quantity)) {
+	if ($is_ajax) { http_response_code(500); header('Content-Type: application/json'); echo json_encode(['success' => false, 'message' => 'Keranjang gagal disimpan. Silakan coba lagi.']); exit; }
+	user_flash('error', 'Keranjang gagal disimpan. Silakan coba lagi.'); user_redirect('/cart');
+}
 if ($is_ajax) {
 	header('Content-Type: application/json');
 	echo json_encode(['success' => true, 'message' => $jumlah . ' produk berhasil ditambahkan ke keranjang.', 'cart_count' => user_cart_count()]);
