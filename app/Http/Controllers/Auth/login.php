@@ -1,46 +1,48 @@
 <?php
 require_once APP_ROOT . '/app/Support/koneksi.php';
 
+$login_notice = (string) ($_SESSION['login_notice'] ?? '');
+unset($_SESSION['login_notice']);
+$login_error = '';
 
-// Cek jika form login sudah disubmit
-if (isset($_POST["username"]) && isset($_POST["password"])) {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['password'])) {
+    $username = trim((string) $_POST['username']);
+    $password = (string) $_POST['password'];
 
-    // Cek user berdasarkan username
-    $stmt = mysqli_prepare($koneksi, "SELECT * FROM user WHERE username = ? LIMIT 1");
-    mysqli_stmt_bind_param($stmt, 's', $username);
-    mysqli_stmt_execute($stmt);
-    $cek = mysqli_stmt_get_result($stmt);
-    
-    if (mysqli_num_rows($cek) > 0) {
-        $data = mysqli_fetch_array($cek);
+    $stmt = mysqli_prepare($koneksi, 'SELECT id_user, nama, username, password, level FROM user WHERE username = ? LIMIT 1');
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 's', $username);
+        mysqli_stmt_execute($stmt);
+        $data = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+        mysqli_stmt_close($stmt);
 
-        // Verifikasi password dengan password yang terenkripsi
-        if (password_verify($password, $data['password'])) {
-            $_SESSION['id_user'] = $data['id_user'];
-            $_SESSION['username'] = $data['username'];
-                $_SESSION['level'] = $data['level'];
-                session_regenerate_id(true);
+        if ($data && password_verify($password, (string) $data['password'])) {
+            session_regenerate_id(true);
+            $_SESSION['id_user'] = (int) $data['id_user'];
+            $_SESSION['username'] = (string) $data['username'];
+            $_SESSION['level'] = (string) $data['level'];
 
-                $nama = htmlspecialchars($data['nama'], ENT_QUOTES, 'UTF-8');
-                $redirect = $data['level'] === 'user' ? '/shop' : '/dashboard';
+            if ($_SESSION['level'] === 'user') {
+                $pending = $_SESSION['checkout_buy_now'] ?? null;
+                $redirect = is_array($pending)
+                    && isset($pending['id_produk'], $pending['jumlah'])
+                    && (int) $pending['id_produk'] > 0
+                    && (int) $pending['jumlah'] > 0
+                    ? '/checkout/customer'
+                    : '/shop';
+            } else {
+                unset($_SESSION['checkout_buy_now']);
+                $redirect = '/dashboard';
+            }
 
-            echo "<script>
-                    alert('Selamat datang $nama ($data[level])');
-                    window.location = '$redirect';
-                </script>";
-        } else {
-            echo "<script>
-                alert('Password salah');
-                window.location = '/login';
-            </script>";
+            header('Location: ' . $redirect, true, 303);
+            exit;
         }
+
+        $login_error = 'Username atau kata sandi tidak sesuai.';
     } else {
-        echo "<script>
-            alert('Username tidak ditemukan');
-            window.location = '/login';
-        </script>";
+        $login_error = 'Login belum dapat diproses. Silakan coba kembali.';
     }
 }
+
 require APP_ROOT . '/resources/views/auth/login.php';

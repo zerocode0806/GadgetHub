@@ -28,7 +28,7 @@
                     <div class="stock <?= (int) $product['stok'] < 1 ? 'out' : ''; ?>"><?= (int) $product['stok'] > 0 ? 'Stok ' . (int) $product['stok'] : 'Stok habis'; ?></div>
                     <div class="product-actions">
                         <?php if ((int) $product['stok'] > 0): ?>
-                            <form method="post" action="/cart/add"><input type="hidden" name="csrf_token" value="<?= e(user_csrf_token()); ?>"><input type="hidden" name="id_produk" value="<?= (int) $product['id_produk']; ?>"><input type="hidden" name="jumlah" value="1"><input type="hidden" name="buy_now" value="1"><button class="btn btn-light" type="submit">Beli Sekarang</button></form>
+                            <form method="post" action="/checkout/customer"><input type="hidden" name="csrf_token" value="<?= e(user_csrf_token()); ?>"><input type="hidden" name="id_produk" value="<?= (int) $product['id_produk']; ?>"><input type="hidden" name="jumlah" value="1"><input type="hidden" name="buy_now" value="1"><button class="btn btn-light" type="submit">Beli Sekarang</button></form>
                             <form class="ajax-cart-form" method="post" action="/cart/add"><input type="hidden" name="csrf_token" value="<?= e(user_csrf_token()); ?>"><input type="hidden" name="id_produk" value="<?= (int) $product['id_produk']; ?>"><input type="hidden" name="jumlah" value="1"><button class="btn btn-primary" type="submit" aria-label="Tambah ke keranjang"><i class="fa-solid fa-cart-plus"></i></button></form>
                         <?php endif; ?>
                     </div>

@@ -157,6 +157,12 @@
             </div>
             
             <div class="card-body">
+                <?php if (!empty($login_notice)): ?>
+                    <div class="alert alert-success" role="status"><?= htmlspecialchars($login_notice, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
+                <?php if (!empty($login_error)): ?>
+                    <div class="alert alert-danger" role="alert"><?= htmlspecialchars($login_error, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
                 <form method="post">
                     <div class="form-floating">
                         <input type="text" class="form-control" id="username" name="username" 

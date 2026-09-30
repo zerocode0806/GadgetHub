@@ -71,14 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
 
                     if (mysqli_stmt_execute($insert)) {
-                        $new_user_id = mysqli_insert_id($koneksi);
                         mysqli_stmt_close($insert);
                         session_regenerate_id(true);
-                        $_SESSION['id_user'] = $new_user_id;
-                        $_SESSION['username'] = $register_values['username'];
-                        $_SESSION['level'] = 'user';
-                        user_flash('success', 'Akun berhasil dibuat. Selamat datang di GadgetHub!');
-                        user_redirect('/shop');
+                        unset($_SESSION['id_user'], $_SESSION['username'], $_SESSION['level']);
+                        $_SESSION['login_notice'] = 'Akun berhasil dibuat. Silakan masuk menggunakan username dan kata sandi yang baru didaftarkan.';
+                        user_redirect('/login');
                     }
 
                     mysqli_stmt_close($insert);

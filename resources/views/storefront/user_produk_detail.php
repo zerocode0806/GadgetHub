@@ -35,7 +35,7 @@ $averageRating = (float) ($ratingStats['average'] ?? 0);
                 <p class="detail-total">Total: <strong id="detail-total-label"><?= user_money($product['harga']); ?></strong></p>
                 <div class="detail-actions">
                     <button class="btn btn-primary btn-block" type="submit"><i class="fa-solid fa-cart-plus"></i>&nbsp; Tambah ke keranjang</button>
-                    <button class="btn btn-buy-now btn-block" type="submit" name="buy_now" value="1"><i class="fa-solid fa-bolt"></i>&nbsp; Beli Sekarang</button>
+                    <button class="btn btn-buy-now btn-block" type="submit" name="buy_now" value="1" formaction="/checkout/customer"><i class="fa-solid fa-bolt"></i>&nbsp; Beli Sekarang</button>
                 </div>
             </form>
         <?php else: ?>
